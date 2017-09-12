@@ -86,11 +86,20 @@ namespace Charader
                 if (Console.KeyAvailable)
                 {
 
-                    Console.WriteLine("New random word");
+                    Console.WriteLine(RandomWord("Substantiv"));
                     Console.ReadKey(true);
+                    //AddScore();
                 }
             }
         }
+
+        private string RandomWord(string table)
+        {
+            Random rnd = new Random();
+            int nextWord = rnd.Next(1, Connection.GetNumberOfWordsFromTable(table));
+            return Connection.ReadWordFromDatabase(table, nextWord);
+        }
+
         private List<Team> CreateTeams()
         {
             Console.Write("How many teams are playing this awesome game? ");
@@ -104,5 +113,11 @@ namespace Charader
             }
             return teamList;
         }
+
+        private void AddScore(Team team)
+        {
+            team.Score++;
+        }
+        
     }
 }
