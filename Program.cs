@@ -83,8 +83,6 @@ namespace Charader
 
             List<Team> teamList = CreateTeams();
             string input = "y";
-            //TODO: showa Leader Board: ställningarna efter varje omgång
-            //TODO: fråga om man vill köra ny omgång while (console.readl Yes eller likande, annars exit environment)
             //loop på antal lag = en omgång
             while (Regex.IsMatch(input, @"^[y](es)?"))
             {
@@ -115,7 +113,7 @@ namespace Charader
 
         private void DisplayLeaderBoard(List<Team> teamList)
         {
-            List<Team> sortedTeamList = teamList.OrderBy(x => x.Score).ToList();
+            List<Team> sortedTeamList = teamList.OrderByDescending(x => x.Score).ToList();
 
             Console.WriteLine("**** LEADER BOARD *****");
 
@@ -140,6 +138,8 @@ namespace Charader
 
         public void WordLoop(Team team)
         {
+            int counter = 0;
+
             while (true)
             {
                 if (!guessingIsActive)
@@ -148,10 +148,13 @@ namespace Charader
                 }
                 if (Console.KeyAvailable)
                 {
-
                     Console.WriteLine(RandomWord("Substantiv"));
                     Console.ReadKey(true);
+                    if (counter != 0)
+                    {
                     AddScore(team);
+                    }
+                    counter++;
                 }
             }
         }
