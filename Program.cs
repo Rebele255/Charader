@@ -9,10 +9,15 @@ namespace Charader
 {
     class Program
     {
+        static GameInfo gameInfo = new GameInfo();
+
         static void Main(string[] args)
         {
+            
             Program p = new Program();
             p.Menu();
+            
+
         }
 
         bool guessingIsActive;
@@ -64,6 +69,7 @@ namespace Charader
 
             //TODO: bara til färdig metod ej switch
             //fråga efter ord osv validera
+            // fixa databas-uppdatering
 
             switch (choice)
             {
@@ -83,8 +89,6 @@ namespace Charader
 
             List<Team> teamList = CreateTeams();
             string input = "y";
-            //TODO: showa Leader Board: ställningarna efter varje omgång
-            //TODO: fråga om man vill köra ny omgång while (console.readl Yes eller likande, annars exit environment)
             //loop på antal lag = en omgång
             while (Regex.IsMatch(input, @"^[y](es)?"))
             {
@@ -158,9 +162,16 @@ namespace Charader
 
         private string RandomWord(string table)
         {
-            Random rnd = new Random();
-            int nextWord = rnd.Next(1, Connection.GetNumberOfWordsFromTable(table));
-            return Connection.ReadWordFromDatabase(table, nextWord);
+            int nextWordId;
+            do
+            {
+                Random rnd = new Random();
+                nextWordId = rnd.Next(1, Connection.GetNumberOfWordsFromTable(table));
+            } while (gameInfo.UsedWordIdList.Contains(nextWordId));
+
+            gameInfo.UsedWordIdList.Add(nextWordId);
+
+            return Connection.ReadWordFromDatabase(table, nextWordId);
         }
 
         private List<Team> CreateTeams()
