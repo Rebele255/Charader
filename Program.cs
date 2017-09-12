@@ -154,6 +154,7 @@ namespace Charader
                 }
                 if (Console.KeyAvailable)
                 {
+                    Console.Write($"{RandomWord("Adjektiv")} ");
                     Console.WriteLine(RandomWord("Substantiv"));
                     Console.ReadKey(true);
                     if (counter != 0)
@@ -167,14 +168,29 @@ namespace Charader
 
         private string RandomWord(string table)
         {
-            int nextWordId;
-            do
+            int nextWordId = 0;
+            if (table == "Substantiv")
             {
-                Random rnd = new Random();
-                nextWordId = rnd.Next(1, Connection.GetNumberOfWordsFromTable(table));
-            } while (gameInfo.UsedWordIdList.Contains(nextWordId));
+                do
+                {
+                    Random rnd = new Random();
+                    nextWordId = rnd.Next(1, Connection.GetNumberOfWordsFromTable(table));
+                } while (gameInfo.UsedSubWordIdList.Contains(nextWordId));
 
-            gameInfo.UsedWordIdList.Add(nextWordId);
+                gameInfo.UsedSubWordIdList.Add(nextWordId);
+                return Connection.ReadWordFromDatabase(table, nextWordId);
+            }
+            if (table == "Adjektiveee")
+            {
+                do
+                {
+                    Random rnd = new Random();
+                    nextWordId = rnd.Next(1, Connection.GetNumberOfWordsFromTable(table));
+                } while (gameInfo.UsedAdjWordIdList.Contains(nextWordId));
+
+                gameInfo.UsedAdjWordIdList.Add(nextWordId);
+                return Connection.ReadWordFromDatabase(table, nextWordId);
+            }
 
             return Connection.ReadWordFromDatabase(table, nextWordId);
         }
