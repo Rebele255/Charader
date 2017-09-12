@@ -62,6 +62,9 @@ namespace Charader
             int choice = int.Parse(Console.ReadLine());
             Console.WriteLine();
 
+            //TODO: bara til färdig metod ej switch
+            //fråga efter ord osv validera
+
             switch (choice)
             {
                 case 1:
@@ -83,7 +86,7 @@ namespace Charader
             //TODO: showa Leader Board: ställningarna efter varje omgång
             //TODO: fråga om man vill köra ny omgång while (console.readl Yes eller likande, annars exit environment)
             //loop på antal lag = en omgång
-            while (Regex.IsMatch(input, @"[y]?(yes)?"))
+            while (Regex.IsMatch(input, @"^[y](es)?"))
             {
                 Console.Clear();
                 foreach (var team in teamList)
@@ -92,7 +95,7 @@ namespace Charader
                     Console.WriteLine("Press Enter to show word");
                     guessingIsActive = true;
                     StopAfterThreeSeconds();
-                    WordLoop();
+                    WordLoop(team);
                 }
                 Console.Clear();
                 DisplayLeaderBoard(teamList);
@@ -135,7 +138,7 @@ namespace Charader
             guessingIsActive = false;
         }
 
-        public void WordLoop()
+        public void WordLoop(Team team)
         {
             while (true)
             {
@@ -148,7 +151,7 @@ namespace Charader
 
                     Console.WriteLine(RandomWord("Substantiv"));
                     Console.ReadKey(true);
-                    //AddScore();
+                    AddScore(team);
                 }
             }
         }
