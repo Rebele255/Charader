@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Charader
@@ -23,8 +24,9 @@ namespace Charader
             Console.WriteLine("-----");
             Console.WriteLine("[1] Play Charuder");
             Console.WriteLine("[2] Add new words");
+            Console.WriteLine("[3] HighScore List");
             //TODO: lägg in menyýval settings
-            Console.WriteLine("[3] Quit");
+            Console.WriteLine("[4] Quit");
 
             int choice = int.Parse(Console.ReadLine());
             Console.WriteLine();
@@ -35,9 +37,13 @@ namespace Charader
                     Run();
                     break;
                 case 2:
-                    //AddNewWords();
+                    AddNewWords();
                     break;
-                case 7:
+                case 3:
+                    //TODO: 
+                    //HighScoreList();
+                    break;
+                case 4:
                     Environment.Exit(0);
                     break;
                 default:
@@ -47,18 +53,72 @@ namespace Charader
             }
         }
 
+        private void AddNewWords()
+        {
+            Console.WriteLine("What kind of word would you like to add?");
+            Console.WriteLine("[1] Noun");
+            Console.WriteLine("[2] Adjective");
+
+            int choice = int.Parse(Console.ReadLine());
+            Console.WriteLine();
+
+            switch (choice)
+            {
+                case 1:
+                    //TODO: metod i connections
+                    //AddNoun();
+                    break;
+                case 2:
+                    //TODO: metod i connections
+                    //AddAdjective();
+                    break;
+            }
+        }
+
         public void Run()
         {
-            List<Team> teamList = CreateTeams();
 
+            List<Team> teamList = CreateTeams();
+            string input = "y";
+            //TODO: showa Leader Board: ställningarna efter varje omgång
+            //TODO: fråga om man vill köra ny omgång while (console.readl Yes eller likande, annars exit environment)
             //loop på antal lag = en omgång
-            foreach (var team in teamList)
+            while (Regex.IsMatch(input, @"[y]?(yes)?"))
             {
-                Console.WriteLine($"*** {team.Name} ***");
-                Console.WriteLine("Press Enter to show word");
-                guessingIsActive = true;
-                StopAfterThreeSeconds();
-                WordLoop();
+                Console.Clear();
+                foreach (var team in teamList)
+                {
+                    Console.WriteLine($"*** {team.Name} ***");
+                    Console.WriteLine("Press Enter to show word");
+                    guessingIsActive = true;
+                    StopAfterThreeSeconds();
+                    WordLoop();
+                }
+                Console.Clear();
+                DisplayLeaderBoard(teamList);
+                input = AskForAnotherRound();
+                
+            }
+            //TODO: spelet är slut och man vill lägga till omgången i HighScoreLista - genomsnitt per runda 
+        }
+
+        private string AskForAnotherRound()
+        {
+            Console.WriteLine();
+            Console.WriteLine("Want to go another round? [Y/N]");
+            string input = Console.ReadLine().ToLower();
+            return input;
+        }
+
+        private void DisplayLeaderBoard(List<Team> teamList)
+        {
+            List<Team> sortedTeamList = teamList.OrderBy(x => x.Score).ToList();
+
+            Console.WriteLine("**** LEADER BOARD *****");
+
+            foreach (var team in sortedTeamList)
+            {
+                Console.WriteLine($"{team.Name}: {team.Score}");
             }
         }
 
