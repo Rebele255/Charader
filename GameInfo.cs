@@ -10,12 +10,13 @@ namespace Charader
     {
         public List<int> UsedSubWordIdList { get; set; }
         public List<int> UsedAdjWordIdList { get; set; }
-
+        public bool PlayTheGame { get; set; }
 
         public GameInfo()
         {
             UsedSubWordIdList = new List<int>(0);
             UsedAdjWordIdList = new List<int>(0);
+            PlayTheGame = true;
         }
     }
 }

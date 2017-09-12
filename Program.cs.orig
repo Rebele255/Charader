@@ -91,12 +91,19 @@ namespace Charader
                 string addWord = AskForNewWord();
                 Connection.AddWordToDatabase("Adjektiv", "word", addWord);
             }
+<<<<<<< HEAD
 
         }
 
         private string AskForNewWord()
         {
             string addWord;
+=======
+            else
+            {
+                Console.WriteLine("No valid type of word");
+            }
+>>>>>>> 0047f58e70d55a3efb0f6947010cab9e21251518
 
             do
             {
