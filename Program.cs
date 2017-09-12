@@ -63,25 +63,31 @@ namespace Charader
             Console.WriteLine("What kind of word would you like to add?");
             Console.WriteLine("[1] Noun");
             Console.WriteLine("[2] Adjective");
-
-            int choice = int.Parse(Console.ReadLine());
+            string inputType = Console.ReadLine();
             Console.WriteLine();
+
+            Console.WriteLine("Word you want to add: ");
+            string addWord = Console.ReadLine();
 
             //TODO: bara til färdig metod ej switch
             //fråga efter ord osv validera
             // fixa databas-uppdatering
-
-            switch (choice)
+            if (inputType == "1")
             {
-                case 1:
-                    //TODO: metod i connections
-                    //AddNoun();
-                    break;
-                case 2:
-                    //TODO: metod i connections
-                    //AddAdjective();
-                    break;
+                Connection.AddWordToDatabase("Substantiv", "word", addWord);
             }
+            else if (inputType == "2")
+            {
+                Connection.AddWordToDatabase("Adjektiv", "word", addWord);
+            }
+            else
+            {
+                Console.WriteLine("No valid type of word");
+            }
+            
+
+
+
         }
 
         public void Run()

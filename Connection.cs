@@ -31,18 +31,19 @@ namespace Charader
             return word;
         }
 
-        public static void AddWordToDatabase (string table, string addWord)
+        public static void AddWordToDatabase (string table, string col, string addWord)
         {
             using (var con = new SqlConnection(connectionString))
             {
-                using (var com = new SqlCommand($"INSERT INTO Substantiv {table} VALUES ('{addWord}')", con))
+                using (var com = new SqlCommand($"INSERT INTO {table} ({col}) VALUES ('{addWord}')", con))
                 {
                     con.Open();
-                    var reader = com.ExecuteReader();
-                    //com.ExecuteNonQuery();
+                    var reader = com.ExecuteNonQuery(); //com.ExecuteReader();
+                    //
                 }
             }
         }
+
         public static int GetNumberOfWordsFromTable(string table)
         {
             using (var con = new SqlConnection(connectionString))
