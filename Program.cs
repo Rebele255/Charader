@@ -186,7 +186,7 @@ namespace Charader
                 gameInfo.UsedSubWordIdList.Add(nextWordId);
                 return Connection.ReadWordFromDatabase(table, nextWordId);
             }
-            if (table == "Adjektiveee")
+            if (table == "Adjektiv")
             {
                 do
                 {
