@@ -119,7 +119,7 @@ namespace Charader
 
         private void DisplayLeaderBoard(List<Team> teamList)
         {
-            List<Team> sortedTeamList = teamList.OrderBy(x => x.Score).ToList();
+            List<Team> sortedTeamList = teamList.OrderByDescending(x => x.Score).ToList();
 
             Console.WriteLine("**** LEADER BOARD *****");
 
@@ -144,6 +144,8 @@ namespace Charader
 
         public void WordLoop(Team team)
         {
+            int counter = 0;
+
             while (true)
             {
                 if (!guessingIsActive)
@@ -152,10 +154,13 @@ namespace Charader
                 }
                 if (Console.KeyAvailable)
                 {
-
                     Console.WriteLine(RandomWord("Substantiv"));
                     Console.ReadKey(true);
+                    if (counter != 0)
+                    {
                     AddScore(team);
+                    }
+                    counter++;
                 }
             }
         }
