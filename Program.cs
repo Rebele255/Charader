@@ -13,10 +13,10 @@ namespace Charader
 
         static void Main(string[] args)
         {
-            
+
             Program p = new Program();
             p.Menu();
-            
+
 
         }
 
@@ -60,34 +60,46 @@ namespace Charader
 
         private void AddNewWords()
         {
-            Console.WriteLine("What kind of word would you like to add?");
-            Console.WriteLine("[1] Noun");
-            Console.WriteLine("[2] Adjective");
-            string inputType = Console.ReadLine();
-            Console.WriteLine();
+            string inputType;
 
-            Console.WriteLine("Word you want to add: ");
-            string addWord = Console.ReadLine();
+            do
+            {
+                Console.WriteLine("What kind of word would you like to add?");
+                Console.WriteLine("[1] Noun");
+                Console.WriteLine("[2] Adjective");
+                inputType = Console.ReadLine();
+                Console.WriteLine();
+                if (inputType != "1" && inputType != "2")
+                {
+                    Console.WriteLine("No valid type of word");
+                }
+            } while (inputType != "1" && inputType != "2");
 
-            //TODO: bara til färdig metod ej switch
-            //fråga efter ord osv validera
-            // fixa databas-uppdatering
+            
             if (inputType == "1")
             {
+                string addWord = AskForNewWord();
                 Connection.AddWordToDatabase("Substantiv", "word", addWord);
             }
             else if (inputType == "2")
             {
+                string addWord = AskForNewWord();
                 Connection.AddWordToDatabase("Adjektiv", "word", addWord);
             }
-            else
+
+        }
+
+        private string AskForNewWord()
+        {
+            string addWord;
+
+            do
             {
-                Console.WriteLine("No valid type of word");
-            }
-            
+                Console.WriteLine("Word you want to add: ");
+                 addWord = Console.ReadLine();
 
-
-
+            } while (!Regex.IsMatch(addWord, @"[A-Za-zåäöÅÄÖ-]"));
+            return addWord;
         }
 
         public void Run()
@@ -110,7 +122,7 @@ namespace Charader
                 Console.Clear();
                 DisplayLeaderBoard(teamList);
                 input = AskForAnotherRound();
-                
+
             }
             //TODO: spelet är slut och man vill lägga till omgången i HighScoreLista - genomsnitt per runda 
         }
@@ -165,7 +177,7 @@ namespace Charader
                     Console.ReadKey(true);
                     if (counter != 0)
                     {
-                    AddScore(team);
+                        AddScore(team);
                     }
                     counter++;
                 }
@@ -219,6 +231,6 @@ namespace Charader
         {
             team.Score++;
         }
-        
+
     }
 }
