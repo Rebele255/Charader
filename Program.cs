@@ -10,6 +10,7 @@ namespace Charader
     class Program
     {
         static GameInfo gameInfo = new GameInfo();
+        bool guessingIsActive;
 
         static void Main(string[] args)
         {
@@ -20,11 +21,10 @@ namespace Charader
 
         }
 
-        bool guessingIsActive;
-
         private void Menu()
         {
-
+            CreateValidListOfID("Substantiv");
+            CreateValidListOfID("Adjektiv");
             do
             {
                 Console.Clear();
@@ -63,6 +63,19 @@ namespace Charader
             } while (gameInfo.PlayTheGame);
         }
 
+        private void CreateValidListOfID(string table)
+        {
+            if (table == "Substantiv")
+            {
+                gameInfo.ValidSubWordIdList = Connection.GetListOfIDFromDatabase(table);
+                
+            }
+            else if (table == "Adjektiv")
+            {
+                gameInfo.ValidAdjWordIdList = Connection.GetListOfIDFromDatabase(table);
+            }
+        }
+
         private void AddNewWords()
         {
             string inputType;
@@ -91,7 +104,6 @@ namespace Charader
                 string addWord = AskForNewWord();
                 Connection.AddWordToDatabase("Adjektiv", "word", addWord);
             }
-
         }
 
         private string AskForNewWord()
@@ -127,7 +139,6 @@ namespace Charader
                 Console.Clear();
                 DisplayLeaderBoard(teamList);
                 input = AskForAnotherRound();
-
             }
             //TODO: spelet är slut och man vill lägga till omgången i HighScoreLista - genomsnitt per runda 
         }
@@ -154,7 +165,7 @@ namespace Charader
 
         private async void StopAfterThreeSeconds()
         {
-            await Task.Delay(3000);
+            await Task.Delay(10000);
             StopCurrentRound();
         }
 
@@ -189,33 +200,28 @@ namespace Charader
             }
         }
 
+
         private string RandomWord(string table)
         {
+            string returnWord = "";
             int nextWordId = 0;
             if (table == "Substantiv")
             {
-                do
-                {
-                    Random rnd = new Random();
-                    nextWordId = rnd.Next(1, Connection.GetNumberOfWordsFromTable(table));
-                } while (gameInfo.UsedSubWordIdList.Contains(nextWordId));
+                Random rnd = new Random();
+                nextWordId = rnd.Next(0, gameInfo.ValidSubWordIdList.Count);
+                returnWord = Connection.ReadWordFromDatabase(table, gameInfo.ValidSubWordIdList[nextWordId]);
+                gameInfo.ValidSubWordIdList.RemoveAt(nextWordId);
 
-                gameInfo.UsedSubWordIdList.Add(nextWordId);
-                return Connection.ReadWordFromDatabase(table, nextWordId);
             }
-            if (table == "Adjektiv")
+            else if (table == "Adjektiv")
             {
-                do
-                {
-                    Random rnd = new Random();
-                    nextWordId = rnd.Next(1, Connection.GetNumberOfWordsFromTable(table));
-                } while (gameInfo.UsedAdjWordIdList.Contains(nextWordId));
-
-                gameInfo.UsedAdjWordIdList.Add(nextWordId);
-                return Connection.ReadWordFromDatabase(table, nextWordId);
+                Random rnd = new Random();
+                nextWordId = rnd.Next(0, gameInfo.ValidAdjWordIdList.Count);
+                returnWord = Connection.ReadWordFromDatabase(table, gameInfo.ValidAdjWordIdList[nextWordId]);
+                gameInfo.ValidAdjWordIdList.RemoveAt(nextWordId);
             }
 
-            return Connection.ReadWordFromDatabase(table, nextWordId);
+            return returnWord;
         }
 
         private List<Team> CreateTeams()

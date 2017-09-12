@@ -63,5 +63,24 @@ namespace Charader
                 return wordCount;
             }
         }
+        public static List<int> GetListOfIDFromDatabase(string table)
+        {
+            List<int> listOfID = new List<int>();
+            using (var con = new SqlConnection(connectionString))
+            {
+                using (var com = new SqlCommand($"SELECT ID FROM {table}", con))
+                {
+                    con.Open();
+                    var reader = com.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        listOfID.Add(reader.GetInt32(0));
+                    }
+                    //com.ExecuteNonQuery();
+
+                }
+                return listOfID;
+            }
+        }
     }
 }
