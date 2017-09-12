@@ -8,12 +8,14 @@ namespace Charader
 {
     class GameInfo
     {
-        public List<int> UsedWordIdList { get; set; }
+        public List<int> UsedSubWordIdList { get; set; }
+        public List<int> UsedAdjWordIdList { get; set; }
+
 
         public GameInfo()
         {
-             UsedWordIdList = new List<int>(0);
-            //UsedWordIdList.Add(3);
+            UsedSubWordIdList = new List<int>(0);
+            UsedAdjWordIdList = new List<int>(0);
         }
     }
 }
