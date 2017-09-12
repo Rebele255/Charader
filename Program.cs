@@ -24,38 +24,43 @@ namespace Charader
 
         private void Menu()
         {
-            Console.WriteLine("-----");
-            Console.WriteLine("Menu: ");
-            Console.WriteLine("-----");
-            Console.WriteLine("[1] Play Charuder");
-            Console.WriteLine("[2] Add new words");
-            Console.WriteLine("[3] HighScore List");
-            //TODO: lägg in menyýval settings
-            Console.WriteLine("[4] Quit");
 
-            int choice = int.Parse(Console.ReadLine());
-            Console.WriteLine();
-
-            switch (choice)
+            do
             {
-                case 1:
-                    Run();
-                    break;
-                case 2:
-                    AddNewWords();
-                    break;
-                case 3:
-                    //TODO: 
-                    //HighScoreList();
-                    break;
-                case 4:
-                    Environment.Exit(0);
-                    break;
-                default:
-                    Console.WriteLine();
-                    Console.WriteLine("Choose one of the alternatives in the menu!");
-                    break;
-            }
+                Console.Clear();
+                Console.WriteLine("-----");
+                Console.WriteLine("Menu: ");
+                Console.WriteLine("-----");
+                Console.WriteLine("[1] Play Charuder");
+                Console.WriteLine("[2] Add new words");
+                Console.WriteLine("[3] HighScore List");
+                //TODO: lägg in menyýval settings
+                Console.WriteLine("[4] Quit");
+
+                int choice = int.Parse(Console.ReadLine());
+                Console.WriteLine();
+
+                switch (choice)
+                {
+                    case 1:
+                        Run();
+                        break;
+                    case 2:
+                        AddNewWords();
+                        break;
+                    case 3:
+                        //TODO: 
+                        //HighScoreList();
+                        break;
+                    case 4:
+                        gameInfo.PlayTheGame = false;
+                        break;
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("Choose one of the alternatives in the menu!");
+                        break;
+                }
+            } while (gameInfo.PlayTheGame);
         }
 
         private void AddNewWords()
@@ -84,9 +89,6 @@ namespace Charader
             {
                 Console.WriteLine("No valid type of word");
             }
-            
-
-
 
         }
 
