@@ -16,8 +16,8 @@ namespace Charader.Mapping
         public HbmMapping Map()
         {
             MapSubstantiv();
-            //MapCar();
-            //MapMovie();
+            MapTheme();
+            MapAdjektiv();
             return _modelMapper.CompileMappingForAllExplicitlyAddedEntities();
         }
 
@@ -45,27 +45,54 @@ namespace Charader.Mapping
         //    });
         //}
 
-        //private void MapMovie()
-        //{
-        //    _modelMapper.Class<Movie>(e =>
-        //    {
-        //        e.Id(p => p.Id, p => p.Generator(Generators.GuidComb));
-        //        e.Property(p => p.Title, p => p.Unique(true)); //
+        private void MapTheme()
+        {
+            _modelMapper.Class<Theme>(e =>
+            {
+                e.Id(p => p.Id, p => p.Generator(Generators.GuidComb));
+                e.Property(p => p.ThemeWord);
+
+                e.Set(x => x.Substantives, collectionMapping =>
+                {
+                    // Inverse true måste vara på ena sidan (men inte den andra). Det spelar ingen roll vilken sida du väljer.
+                    collectionMapping.Table("SubstantivTheme");
+                    collectionMapping.Cascade(Cascade.None);
+                    collectionMapping.Key(keyMap => keyMap.Column("ThemeId"));
+                }, map => map.ManyToMany(p => p.Column("SubstantivId")));
+
+                e.Set(x => x.Adjectives, collectionMapping =>
+                {
+                    // Inverse true måste vara på ena sidan (men inte den andra). Det spelar ingen roll vilken sida du väljer.
+                    collectionMapping.Table("AdjektivTheme");
+                    collectionMapping.Cascade(Cascade.None);
+                    collectionMapping.Key(keyMap => keyMap.Column("ThemeId"));
+                }, map => map.ManyToMany(p => p.Column("AdjektivId")));
+            });
+        }
+
+        private void MapAdjektiv()
+        {
+            _modelMapper.Class<Adjektiv>(e =>
+            {
+                // Låt varje tabell ha en "uniqueidentifier" med namn "Id" och är "primary key". Förutom kopplingstabeller.
+                e.Id(p => p.Id, p => p.Generator(Generators.GuidComb));
+
+                // Koppla ihop dina klassers fält med kolumnerna i databastabellen
+                e.Property(p => p.Word); // property = vanlig kolumn
+                                            //e.Property(p => p.Updated, m => m.Column("Uppdaterad")); // Exempel när en kolumn i en tabell heter "Uppdaterad" (och kopplas till "Updated")
 
 
-        //        e.Set(x => x.Customers, collectionMapping =>
-        //        {
-        //            // Inverse true måste vara på ena sidan (men inte den andra). Det spelar ingen roll vilken sida du väljer.
-        //            // collectionMapping.Inverse(true); //får bara finnas på ena!! 
-        //            collectionMapping.Table("CustomerRentsMovie");
-        //            collectionMapping.Cascade(Cascade.None);
-        //            collectionMapping.Key(keyMap => keyMap.Column("MovieId"));
-        //            collectionMapping.Inverse(true);
+                // Många-till-många-relation mellan BlogPost och Tag. (Det behövs en ManyToMany på andra sidan också)
+                e.Set(x => x.Themes, collectionMapping =>
+                {
+                    collectionMapping.Table("AdjektivTheme"); //namn på mellanliggande tabell
+                    collectionMapping.Inverse(true); //får bara finnas på ena!! 
+                    collectionMapping.Cascade(Cascade.None); // Sätt alltid "Cascade.None" vid en många-till-många-relation
+                    collectionMapping.Key(keyMap => keyMap.Column("AdjektivId")); // kopplingstabell (mellanliggande)
+                }, map => map.ManyToMany(p => p.Column("ThemeId"))); //kopplingstabellen (mellanliggande)
+            });
 
-        //        }, map => map.ManyToMany(p => p.Column("CustomerId")));
-        //    });
-        //}
-
+        }
         private void MapSubstantiv()
         {
             _modelMapper.Class<Substantiv>(e =>
@@ -74,18 +101,18 @@ namespace Charader.Mapping
                 e.Id(p => p.Id, p => p.Generator(Generators.GuidComb));
 
                 // Koppla ihop dina klassers fält med kolumnerna i databastabellen
-                e.Property(p => p.SubWord); // property = vanlig kolumn
-                //e.Property(p => p.Updated, m => m.Column("Uppdaterad")); // Exempel när en kolumn i en tabell heter "Uppdaterad" (och kopplas till "Updated")
-                
+                e.Property(p => p.Word); // property = vanlig kolumn
+                                            //e.Property(p => p.Updated, m => m.Column("Uppdaterad")); // Exempel när en kolumn i en tabell heter "Uppdaterad" (och kopplas till "Updated")
+
 
                 // Många-till-många-relation mellan BlogPost och Tag. (Det behövs en ManyToMany på andra sidan också)
-                //e.Set(x => x.Movies, collectionMapping =>
-                //{
-
-                //    collectionMapping.Table("CustomerRentsMovie"); //namn på mellanliggande tabell
-                //    collectionMapping.Cascade(Cascade.None); // Sätt alltid "Cascade.None" vid en många-till-många-relation
-                //    collectionMapping.Key(keyMap => keyMap.Column("CustomerId")); // kopplingstabell (mellanliggande)
-                //}, map => map.ManyToMany(p => p.Column("MovieId"))); //kopplingstabellen (mellanliggande)
+                e.Set(x => x.Themes, collectionMapping =>
+                {
+                    collectionMapping.Table("SubstantivTheme"); //namn på mellanliggande tabell
+                    collectionMapping.Inverse(true); //får bara finnas på ena!! 
+                    collectionMapping.Cascade(Cascade.None); // Sätt alltid "Cascade.None" vid en många-till-många-relation
+                    collectionMapping.Key(keyMap => keyMap.Column("SubstantivId")); // kopplingstabell (mellanliggande)
+                }, map => map.ManyToMany(p => p.Column("ThemeId"))); //kopplingstabellen (mellanliggande)
             });
 
         }

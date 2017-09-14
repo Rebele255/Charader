@@ -10,12 +10,18 @@ namespace Charader.Domain
     {
         public Adjektiv()
         {
-            ThemesAdj = new List<Theme>();
+            Themes = new List<Theme>();
         }
 
         public virtual Guid Id { get; set; }
-        public virtual string AdjWord { get; set; }
+        public virtual string Word { get; set; }
 
-        public virtual ICollection<Theme> ThemesAdj { get; set; }
+        public virtual ICollection<Theme> Themes { get; set; }
+
+        public virtual void AddTheme(Theme theme)
+        {
+            Themes.Add(theme);
+            theme.Adjectives.Add(this);
+        }
     }
 }

@@ -12,5 +12,12 @@ namespace Charader.Domain
         public virtual string ThemeWord { get; set; }
 
         public virtual ICollection<Substantiv> Substantives { get; set; }
+        public virtual ICollection<Adjektiv> Adjectives { get; set; }
+
+        public Theme()
+        {
+            Substantives = new List<Substantiv>();
+            Adjectives = new List<Adjektiv>();
+        }
     }
 }

@@ -15,9 +15,16 @@ namespace Charader.Domain
 
 
         public virtual Guid Id { get; set; }
-        public virtual string SubWord { get; set; }
+        public virtual string Word { get; set; }
 
         public virtual ICollection<Theme> Themes { get; set; }
+
+
+        public virtual void AddTheme(Theme theme)
+        {
+            theme.Substantives.Add(this); //från temats håll
+            Themes.Add(theme);// från Substantivets håll
+        }
 
 
     }

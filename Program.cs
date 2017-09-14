@@ -6,7 +6,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Charader.Domain;
-using Charader.Services;
 using NHibernate.Linq;
 
 namespace Charader
@@ -32,16 +31,39 @@ namespace Charader
             {
                 session.Delete(word);
             }
+            var adjektiv1 = new Adjektiv
+            {
+                Word = "Krullig"
+            };
+            session.Save(adjektiv1);
 
             var substantiv1 = new Substantiv
             {
-                SubWord = "Grävskopa"
+                Word = "Grävskopa"
             };
             session.Save(substantiv1);
 
-
             //adda some themes och försök connecta dessa med substantiv --> gör metoder för detta och ändra i mappning, undersök med save - var behövs det?
 
+            foreach (var word in session.Query<Theme>())
+            {
+                session.Delete(word);
+            }
+            session.Flush();
+
+            var theme1 = new Theme
+            {
+                ThemeWord = "Vuxen"
+            };
+            var theme2 = new Theme
+            {
+                ThemeWord = "Barn"
+            };
+            adjektiv1.AddTheme(theme2);
+            session.Save(theme1);
+            session.Save(theme2);
+            substantiv1.AddTheme(theme2);
+            session.Save(substantiv1);
             DbService.CloseSession(session);
         }
 
