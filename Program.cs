@@ -1,9 +1,13 @@
-﻿using System;
+﻿using Charader.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Charader.Domain;
+using Charader.Services;
+using NHibernate.Linq;
 
 namespace Charader
 {
@@ -13,11 +17,28 @@ namespace Charader
 
         static void Main(string[] args)
         {
+            //Program p = new Program();
+            //p.Menu();
 
-            Program p = new Program();
-            p.Menu();
+            WithHibernate();
+        }
 
+        private static void WithHibernate()
+        {
+            var session = DbService.OpenSession();
 
+            foreach (var word in session.Query<Substantiv>())
+            {
+                session.Delete(word);
+            }
+
+            var substantiv1 = new Substantiv
+            {
+                SubWord = "Grävskopa"
+            };
+            session.Save(substantiv1);
+
+            DbService.CloseSession(session);
         }
 
         bool guessingIsActive;
