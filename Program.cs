@@ -38,6 +38,9 @@ namespace Charader
             };
             session.Save(substantiv1);
 
+
+            //adda some themes och försök connecta dessa med substantiv --> gör metoder för detta och ändra i mappning, undersök med save - var behövs det?
+
             DbService.CloseSession(session);
         }
 
