@@ -18,110 +18,121 @@ namespace Charader
         static void Main(string[] args)
         {
             Program p = new Program();
-            //p.Menu();
+            p.Menu();
 
-            WithHibernate();
-            p.AddNewWords();
+            //WithHibernate();
+            //p.AddNewWords();
         }
 
-        private static void WithHibernate()
-        {
-            var session = DbService.OpenSession();
-
-            foreach (var word in session.Query<Adjektiv>())
-            {
-                session.Delete(word);
-            }
-
-            foreach (var word in session.Query<Substantiv>())
-            {
-                session.Delete(word);
-            }
-
-
-
-            var adjektiv1 = new Adjektiv
-            {
-                Word = "Krullig"
-            };
-            session.Save(adjektiv1);
-
-            //var substantiv1 = new Substantiv
-            //{
-            //    Word = "Grävskopa"
-            //};
-            var substantiv2 = new Substantiv
-            {
-                Word = "Hopprep"
-            };
-           // session.Save(substantiv1);
-            session.Save(substantiv2);
-
-            //adda some themes och försök connecta dessa med substantiv --> gör metoder för detta och ändra i mappning, undersök med save - var behövs det?
-
-            foreach (var word in session.Query<Theme>())
-            {
-                session.Delete(word);
-            }
-            session.Flush();
-
-            var theme1 = new Theme
-            {
-                ThemeWord = "Vuxen"
-            };
-            var theme2 = new Theme
-            {
-                ThemeWord = "Barn"
-            };
-            adjektiv1.AddTheme(theme2);
-            session.Save(theme1);
-            session.Save(theme2);
-            //substantiv1.AddTheme(theme2);
-            //session.Save(substantiv1);
-            DbService.CloseSession(session);
-        }
-
-        //private void Menu()
+        //private static void WithHibernate()
         //{
-        //    CreateValidListOfID("Substantiv");
-        //    CreateValidListOfID("Adjektiv");
-        //    do
+        //    var session = DbService.OpenSession();
+
+        //    foreach (var word in session.Query<Adjektiv>())
         //    {
-        //        Console.Clear();
-        //        Console.WriteLine("-----");
-        //        Console.WriteLine("Menu: ");
-        //        Console.WriteLine("-----");
-        //        Console.WriteLine("[1] Play Charuder");
-        //        Console.WriteLine("[2] Add new words");
-        //        Console.WriteLine("[3] HighScore List");
-        //        //TODO: lägg in menyval settings
-        //        Console.WriteLine("[4] Quit");
+        //        session.Delete(word);
+        //    }
 
-        //        int choice = int.Parse(Console.ReadLine());
-        //        Console.WriteLine();
+        //    foreach (var word in session.Query<Substantiv>())
+        //    {
+        //        session.Delete(word);
+        //    }
 
-        //        switch (choice)
-        //        {
-        //            case 1:
-        //                Run();
-        //                break;
-        //            case 2:
-        //                AddNewWords();
-        //                break;
-        //            case 3:
-        //                //TODO: 
-        //                //HighScoreList();
-        //                break;
-        //            case 4:
-        //                gameInfo.PlayTheGame = false;
-        //                break;
-        //            default:
-        //                Console.WriteLine();
-        //                Console.WriteLine("Choose one of the alternatives in the menu!");
-        //                break;
-        //        }
-        //    } while (gameInfo.PlayTheGame);
+
+
+        //    var adjektiv1 = new Adjektiv
+        //    {
+        //        Word = "Krullig"
+        //    };
+        //    session.Save(adjektiv1);
+
+        //    //var substantiv1 = new Substantiv
+        //    //{
+        //    //    Word = "Grävskopa"
+        //    //};
+        //    var substantiv2 = new Substantiv
+        //    {
+        //        Word = "Hopprep"
+        //    };
+        //   // session.Save(substantiv1);
+        //    session.Save(substantiv2);
+
+        //    //adda some themes och försök connecta dessa med substantiv --> gör metoder för detta och ändra i mappning, undersök med save - var behövs det?
+
+        //    foreach (var word in session.Query<Theme>())
+        //    {
+        //        session.Delete(word);
+        //    }
+        //    session.Flush();
+
+        //    var theme1 = new Theme
+        //    {
+        //        ThemeWord = "Vuxen"
+        //    };
+        //    var theme2 = new Theme
+        //    {
+        //        ThemeWord = "Barn"
+        //    };
+        //    adjektiv1.AddTheme(theme2);
+        //    session.Save(theme1);
+        //    session.Save(theme2);
+        //    //substantiv1.AddTheme(theme2);
+        //    //session.Save(substantiv1);
+        //    DbService.CloseSession(session);
         //}
+
+        private void Menu()
+        {
+            
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("-----");
+                Console.WriteLine("Menu: ");
+                Console.WriteLine("-----");
+                Console.WriteLine("[1] Play Charuder");
+                Console.WriteLine("[2] Add new words");
+                Console.WriteLine("[3] HighScore List");
+                //TODO: lägg in menyval settings
+                Console.WriteLine("[4] Quit");
+                int choice = AskForMenuChoice();
+                Console.WriteLine();
+
+                switch (choice)
+                {
+                    case 1:
+                        CreateValidListOfID("Substantiv");
+                        CreateValidListOfID("Adjektiv");
+                        Run();
+                        break;
+                    case 2:
+                        AddNewWords();
+                        break;
+                    case 3:
+                        //TODO: 
+                        //HighScoreList();
+                        break;
+                    case 4:
+                        gameInfo.PlayTheGame = false;
+                        break;
+                    default:
+                        Console.WriteLine();
+                        Console.WriteLine("Choose one of the alternatives in the menu!");
+                        break;
+                }
+            } while (gameInfo.PlayTheGame);
+        }
+
+        private static int AskForMenuChoice()
+        {
+            string input = "";
+            do
+            {
+                input = Console.ReadLine();
+                
+            } while (!Regex.IsMatch(input, @"[1-4qQ]"));
+            return int.Parse(Console.ReadLine());
+        }
 
         private void CreateValidListOfID(string typeOfWord)
         {
@@ -199,9 +210,9 @@ namespace Charader
         {
 
             List<Team> teamList = CreateTeams();
-            string input = "y";
+            string input = "";
             //loop på antal lag = en omgång
-            while (Regex.IsMatch(input, @"^[y](es)?"))
+            do
             {
                 Console.Clear();
                 foreach (var team in teamList)
@@ -215,7 +226,7 @@ namespace Charader
                 Console.Clear();
                 DisplayLeaderBoard(teamList);
                 input = AskForAnotherRound();
-            }
+            } while (Regex.IsMatch(input, @"^[y](es)?"));
             //TODO: spelet är slut och man vill lägga till omgången i HighScoreLista - genomsnitt per runda 
         }
 
