@@ -126,12 +126,12 @@ namespace Charader
         {
             if (table == "Substantiv")
             {
-                gameInfo.ValidSubWordIdList = Connection.GetListOfIDFromDatabase(table);
+                gameInfo.ValidSubWordIdList = Connection.GetListOfSubstantivFromDatabase();
 
             }
             else if (table == "Adjektiv")
             {
-                gameInfo.ValidAdjWordIdList = Connection.GetListOfIDFromDatabase(table);
+                gameInfo.ValidAdjWordIdList = Connection.GetListOfAdjektivFromDatabase();
             }
         }
 
@@ -153,16 +153,16 @@ namespace Charader
             } while (inputType != "1" && inputType != "2");
 
             
-            if (inputType == "1")
-            {
-                string addWord = AskForNewWord();
-                Connection.AddWordToDatabase("Substantiv", "word", addWord);
-            }
-            else if (inputType == "2")
-            {
-                string addWord = AskForNewWord();
-                Connection.AddWordToDatabase("Adjektiv", "word", addWord);
-            }
+            //if (inputType == "1")
+            //{
+            //    string addWord = AskForNewWord();
+            //    Connection.AddWordToDatabase("Substantiv", "word", addWord);
+            //}
+            //else if (inputType == "2")
+            //{
+            //    string addWord = AskForNewWord();
+            //    Connection.AddWordToDatabase("Adjektiv", "word", addWord);
+            //}
         }
 
         private string AskForNewWord()
@@ -268,7 +268,7 @@ namespace Charader
             {
                 Random rnd = new Random();
                 nextWordId = rnd.Next(0, gameInfo.ValidSubWordIdList.Count);
-                returnWord = Connection.ReadWordFromDatabase(table, gameInfo.ValidSubWordIdList[nextWordId]);
+                returnWord = gameInfo.ValidSubWordIdList[nextWordId].Word;
                 gameInfo.ValidSubWordIdList.RemoveAt(nextWordId);
 
             }
@@ -276,7 +276,7 @@ namespace Charader
             {
                 Random rnd = new Random();
                 nextWordId = rnd.Next(0, gameInfo.ValidAdjWordIdList.Count);
-                returnWord = Connection.ReadWordFromDatabase(table, gameInfo.ValidAdjWordIdList[nextWordId]);
+                returnWord = gameInfo.ValidAdjWordIdList[nextWordId].Word;
                 gameInfo.ValidAdjWordIdList.RemoveAt(nextWordId);
             }
 

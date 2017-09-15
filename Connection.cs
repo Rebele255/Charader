@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Charader.Domain;
 using Charader.Services;
+using Charader.Mapping;
+using NHibernate.Linq;
 
 namespace Charader
 {
@@ -15,7 +17,16 @@ namespace Charader
         public static List<Substantiv> GetListOfSubstantivFromDatabase()
         {
             var session = DbService.OpenSession();
-            var allSubstantiv = session.Query<Customer>().ToList();
+            var allSubstantiv = session.Query<Substantiv>().ToList();
+            return allSubstantiv;
+
+        }
+
+        public static List<Adjektiv> GetListOfAdjektivFromDatabase()
+        {
+            var session = DbService.OpenSession();
+            var allAdjektiv = session.Query<Adjektiv>().ToList();
+            return allAdjektiv;
 
         }
         //private static string connectionString = "Server = (localdb)\\mssqllocaldb; Database = Charuder"; //för att få två ord kör vi denna metod två gånger istället för att ändra metoden?
