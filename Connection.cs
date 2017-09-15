@@ -6,21 +6,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Charader.Domain;
+using NHibernate.Linq;
 
 namespace Charader
 {
     class Connection
     {
-        public static void AddSubstantivTODatabase(string input)
+        public static void AddSubstantivTODatabase(string word, string tema)
         {
             var session2 = DbService.OpenSession();
             var substantiv = new Substantiv
             {
-                Word = input
+                Word = word
             };
             session2.Save(substantiv);
+
+            List<string> themeList = tema.Split(',').ToList();
+            foreach (var item in themeList)
+            {
+                string trimTheme = item.Trim();
+                var theme = session2.Query<Theme>().Where(c => c.ThemeWord == trimTheme).FirstOrDefault();
+                substantiv.AddTheme(theme);
+            }
+            session2.Flush();
+            
+            DbService.CloseSession(session2);
         }
-        public static void AddAdjektivTODatabase(string input)
+        public static void AddAdjektivTODatabase(string input, string tema)
         {
             var session2 = DbService.OpenSession();
             var adjektiv = new Adjektiv
@@ -28,6 +40,16 @@ namespace Charader
                 Word = input
             };
             session2.Save(adjektiv);
+
+            List<string> themeList = tema.Split(',').ToList();
+            foreach (var item in themeList)
+            {
+                string trimTheme = item.Trim();
+                var theme = session2.Query<Theme>().Where(c => c.ThemeWord == trimTheme).FirstOrDefault();
+                adjektiv.AddTheme(theme);
+            }
+            session2.Flush();
+            DbService.CloseSession(session2);
         }
         //private static string connectionString = "Server = (localdb)\\mssqllocaldb; Database = Charuder"; //för att få två ord kör vi denna metod två gånger istället för att ändra metoden?
 
@@ -104,4 +126,4 @@ namespace Charader
 
     }
     }
-}
+

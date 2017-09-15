@@ -22,8 +22,8 @@ namespace Charader.Domain
 
         public virtual void AddTheme(Theme theme)
         {
-            theme.Substantives.Add(this); //från temats håll
             Themes.Add(theme);// från Substantivets håll
+            theme.Substantives.Add(this); //från temats håll
         }
 
 

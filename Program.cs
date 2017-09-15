@@ -17,10 +17,11 @@ namespace Charader
 
         static void Main(string[] args)
         {
-            //Program p = new Program();
+            Program p = new Program();
             //p.Menu();
 
             WithHibernate();
+            p.AddNewWords();
         }
 
         private static void WithHibernate()
@@ -80,60 +81,60 @@ namespace Charader
             DbService.CloseSession(session);
         }
 
-        private void Menu()
-        {
-            CreateValidListOfID("Substantiv");
-            CreateValidListOfID("Adjektiv");
-            do
-            {
-                Console.Clear();
-                Console.WriteLine("-----");
-                Console.WriteLine("Menu: ");
-                Console.WriteLine("-----");
-                Console.WriteLine("[1] Play Charuder");
-                Console.WriteLine("[2] Add new words");
-                Console.WriteLine("[3] HighScore List");
-                //TODO: lägg in menyval settings
-                Console.WriteLine("[4] Quit");
+        //private void Menu()
+        //{
+        //    CreateValidListOfID("Substantiv");
+        //    CreateValidListOfID("Adjektiv");
+        //    do
+        //    {
+        //        Console.Clear();
+        //        Console.WriteLine("-----");
+        //        Console.WriteLine("Menu: ");
+        //        Console.WriteLine("-----");
+        //        Console.WriteLine("[1] Play Charuder");
+        //        Console.WriteLine("[2] Add new words");
+        //        Console.WriteLine("[3] HighScore List");
+        //        //TODO: lägg in menyval settings
+        //        Console.WriteLine("[4] Quit");
 
-                int choice = int.Parse(Console.ReadLine());
-                Console.WriteLine();
+        //        int choice = int.Parse(Console.ReadLine());
+        //        Console.WriteLine();
 
-                switch (choice)
-                {
-                    case 1:
-                        Run();
-                        break;
-                    case 2:
-                        AddNewWords();
-                        break;
-                    case 3:
-                        //TODO: 
-                        //HighScoreList();
-                        break;
-                    case 4:
-                        gameInfo.PlayTheGame = false;
-                        break;
-                    default:
-                        Console.WriteLine();
-                        Console.WriteLine("Choose one of the alternatives in the menu!");
-                        break;
-                }
-            } while (gameInfo.PlayTheGame);
-        }
+        //        switch (choice)
+        //        {
+        //            case 1:
+        //                Run();
+        //                break;
+        //            case 2:
+        //                AddNewWords();
+        //                break;
+        //            case 3:
+        //                //TODO: 
+        //                //HighScoreList();
+        //                break;
+        //            case 4:
+        //                gameInfo.PlayTheGame = false;
+        //                break;
+        //            default:
+        //                Console.WriteLine();
+        //                Console.WriteLine("Choose one of the alternatives in the menu!");
+        //                break;
+        //        }
+        //    } while (gameInfo.PlayTheGame);
+        //}
 
-        private void CreateValidListOfID(string table)
-        {
-            if (table == "Substantiv")
-            {
-                gameInfo.ValidSubWordIdList = Connection.GetListOfIDFromDatabase(table);
-                
-            }
-            else if (table == "Adjektiv")
-            {
-                gameInfo.ValidAdjWordIdList = Connection.GetListOfIDFromDatabase(table);
-            }
-        }
+        //private void CreateValidListOfID(string table)
+        //{
+        //    if (table == "Substantiv")
+        //    {
+        //        gameInfo.ValidSubWordIdList = Connection.GetListOfIDFromDatabase(table);
+
+        //    }
+        //    else if (table == "Adjektiv")
+        //    {
+        //        gameInfo.ValidAdjWordIdList = Connection.GetListOfIDFromDatabase(table);
+        //    }
+        //}
 
         private void AddNewWords()
         {
@@ -156,14 +157,29 @@ namespace Charader
             if (inputType == "1")
             {
                 string addWord = AskForNewWord();
-                Connection.AddSubstantivTODatabase(addWord);
+                string addTheme = AskAddTheme(addWord);
+                Connection.AddSubstantivTODatabase(addWord, addTheme);
                 //Connection.AddWordToDatabase("Substantiv", "word", addWord); //FÖRR
             }
             else if (inputType == "2")
             {
                 string addWord = AskForNewWord();
-                Connection.AddAdjektivTODatabase(addWord);
+                string addTheme = AskAddTheme(addWord);
+                Connection.AddAdjektivTODatabase(addWord, addTheme);
+                //Connection.AddAdjektivTODatabase(addWord);
             }
+        }
+
+        private string AskAddTheme(string word)
+        {
+            string addThemeToWord;
+            do
+            {
+                Console.WriteLine($"Which theme(s) does {word} belong to? Separate with comma");
+                addThemeToWord = Console.ReadLine();
+
+            } while (!Regex.IsMatch(addThemeToWord, @"^[A-Za-zåäöÅÄÖ,\s]*$"));
+            return addThemeToWord;
         }
 
         private string AskForNewWord()
@@ -194,7 +210,7 @@ namespace Charader
                     Console.WriteLine("Press Enter to show word");
                     guessingIsActive = true;
                     StopAfterThreeSeconds();
-                    WordLoop(team);
+                    //WordLoop(team);
                 }
                 Console.Clear();
                 DisplayLeaderBoard(teamList);
@@ -236,53 +252,53 @@ namespace Charader
             guessingIsActive = false;
         }
 
-        public void WordLoop(Team team)
-        {
-            int counter = 0;
+        //public void WordLoop(Team team)
+        //{
+        //    int counter = 0;
 
-            while (true)
-            {
-                if (!guessingIsActive)
-                {
-                    break;
-                }
-                if (Console.KeyAvailable)
-                {
-                    Console.Write($"{RandomWord("Adjektiv")} ");
-                    Console.WriteLine(RandomWord("Substantiv"));
-                    Console.ReadKey(true);
-                    if (counter != 0)
-                    {
-                        AddScore(team);
-                    }
-                    counter++;
-                }
-            }
-        }
+        //    while (true)
+        //    {
+        //        if (!guessingIsActive)
+        //        {
+        //            break;
+        //        }
+        //        if (Console.KeyAvailable)
+        //        {
+        //            Console.Write($"{RandomWord("Adjektiv")} ");
+        //            Console.WriteLine(RandomWord("Substantiv"));
+        //            Console.ReadKey(true);
+        //            if (counter != 0)
+        //            {
+        //                AddScore(team);
+        //            }
+        //            counter++;
+        //        }
+        //    }
+        //}
 
 
-        private string RandomWord(string table)
-        {
-            string returnWord = "";
-            int nextWordId = 0;
-            if (table == "Substantiv")
-            {
-                Random rnd = new Random();
-                nextWordId = rnd.Next(0, gameInfo.ValidSubWordIdList.Count);
-                returnWord = Connection.ReadWordFromDatabase(table, gameInfo.ValidSubWordIdList[nextWordId]);
-                gameInfo.ValidSubWordIdList.RemoveAt(nextWordId);
+        //private string RandomWord(string table)
+        //{
+        //    string returnWord = "";
+        //    int nextWordId = 0;
+        //    if (table == "Substantiv")
+        //    {
+        //        Random rnd = new Random();
+        //        nextWordId = rnd.Next(0, gameInfo.ValidSubWordIdList.Count);
+        //        returnWord = Connection.ReadWordFromDatabase(table, gameInfo.ValidSubWordIdList[nextWordId]);
+        //        gameInfo.ValidSubWordIdList.RemoveAt(nextWordId);
 
-            }
-            else if (table == "Adjektiv")
-            {
-                Random rnd = new Random();
-                nextWordId = rnd.Next(0, gameInfo.ValidAdjWordIdList.Count);
-                returnWord = Connection.ReadWordFromDatabase(table, gameInfo.ValidAdjWordIdList[nextWordId]);
-                gameInfo.ValidAdjWordIdList.RemoveAt(nextWordId);
-            }
+        //    }
+        //    else if (table == "Adjektiv")
+        //    {
+        //        Random rnd = new Random();
+        //        nextWordId = rnd.Next(0, gameInfo.ValidAdjWordIdList.Count);
+        //        returnWord = Connection.ReadWordFromDatabase(table, gameInfo.ValidAdjWordIdList[nextWordId]);
+        //        gameInfo.ValidAdjWordIdList.RemoveAt(nextWordId);
+        //    }
 
-            return returnWord;
-        }
+        //    return returnWord;
+        //}
 
         private List<Team> CreateTeams()
         {
