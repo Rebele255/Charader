@@ -17,10 +17,11 @@ namespace Charader
 
         static void Main(string[] args)
         {
-            //Program p = new Program();
+            Program p = new Program();
             //p.Menu();
 
             WithHibernate();
+            p.AddNewWords();
         }
 
         private static void WithHibernate()
@@ -45,15 +46,15 @@ namespace Charader
             };
             session.Save(adjektiv1);
 
-            var substantiv1 = new Substantiv
-            {
-                Word = "Grävskopa"
-            };
+            //var substantiv1 = new Substantiv
+            //{
+            //    Word = "Grävskopa"
+            //};
             var substantiv2 = new Substantiv
             {
                 Word = "Hopprep"
             };
-            session.Save(substantiv1);
+           // session.Save(substantiv1);
             session.Save(substantiv2);
 
             //adda some themes och försök connecta dessa med substantiv --> gör metoder för detta och ändra i mappning, undersök med save - var behövs det?
@@ -75,63 +76,63 @@ namespace Charader
             adjektiv1.AddTheme(theme2);
             session.Save(theme1);
             session.Save(theme2);
-            substantiv1.AddTheme(theme2);
-            session.Save(substantiv1);
+            //substantiv1.AddTheme(theme2);
+            //session.Save(substantiv1);
             DbService.CloseSession(session);
         }
 
-        private void Menu()
-        {
-            CreateValidListOfID("Substantiv");
-            CreateValidListOfID("Adjektiv");
-            do
-            {
-                Console.Clear();
-                Console.WriteLine("-----");
-                Console.WriteLine("Menu: ");
-                Console.WriteLine("-----");
-                Console.WriteLine("[1] Play Charuder");
-                Console.WriteLine("[2] Add new words");
-                Console.WriteLine("[3] HighScore List");
-                //TODO: lägg in menyýval settings
-                Console.WriteLine("[4] Quit");
+        //private void Menu()
+        //{
+        //    CreateValidListOfID("Substantiv");
+        //    CreateValidListOfID("Adjektiv");
+        //    do
+        //    {
+        //        Console.Clear();
+        //        Console.WriteLine("-----");
+        //        Console.WriteLine("Menu: ");
+        //        Console.WriteLine("-----");
+        //        Console.WriteLine("[1] Play Charuder");
+        //        Console.WriteLine("[2] Add new words");
+        //        Console.WriteLine("[3] HighScore List");
+        //        //TODO: lägg in menyval settings
+        //        Console.WriteLine("[4] Quit");
 
-                int choice = int.Parse(Console.ReadLine());
-                Console.WriteLine();
+        //        int choice = int.Parse(Console.ReadLine());
+        //        Console.WriteLine();
 
-                switch (choice)
-                {
-                    case 1:
-                        Run();
-                        break;
-                    case 2:
-                        AddNewWords();
-                        break;
-                    case 3:
-                        //TODO: 
-                        //HighScoreList();
-                        break;
-                    case 4:
-                        gameInfo.PlayTheGame = false;
-                        break;
-                    default:
-                        Console.WriteLine();
-                        Console.WriteLine("Choose one of the alternatives in the menu!");
-                        break;
-                }
-            } while (gameInfo.PlayTheGame);
-        }
+        //        switch (choice)
+        //        {
+        //            case 1:
+        //                Run();
+        //                break;
+        //            case 2:
+        //                AddNewWords();
+        //                break;
+        //            case 3:
+        //                //TODO: 
+        //                //HighScoreList();
+        //                break;
+        //            case 4:
+        //                gameInfo.PlayTheGame = false;
+        //                break;
+        //            default:
+        //                Console.WriteLine();
+        //                Console.WriteLine("Choose one of the alternatives in the menu!");
+        //                break;
+        //        }
+        //    } while (gameInfo.PlayTheGame);
+        //}
 
         private void CreateValidListOfID(string table)
         {
             if (table == "Substantiv")
             {
-                gameInfo.ValidSubWordIdList = Connection.GetListOfSubstantivFromDatabase();
-
+                gameInfo.ValidSubWordIdList = Connection.GetListOfIDFromDatabase(table);
+                
             }
             else if (table == "Adjektiv")
             {
-                gameInfo.ValidAdjWordIdList = Connection.GetListOfAdjektivFromDatabase();
+                gameInfo.ValidAdjWordIdList = Connection.GetListOfIDFromDatabase(table);
             }
         }
 
@@ -153,16 +154,32 @@ namespace Charader
             } while (inputType != "1" && inputType != "2");
 
             
-            //if (inputType == "1")
-            //{
-            //    string addWord = AskForNewWord();
-            //    Connection.AddWordToDatabase("Substantiv", "word", addWord);
-            //}
-            //else if (inputType == "2")
-            //{
-            //    string addWord = AskForNewWord();
-            //    Connection.AddWordToDatabase("Adjektiv", "word", addWord);
-            //}
+            if (inputType == "1")
+            {
+                string addWord = AskForNewWord();
+                string addTheme = AskAddTheme(addWord);
+                Connection.AddSubstantivTODatabase(addWord, addTheme);
+                //Connection.AddWordToDatabase("Substantiv", "word", addWord); //FÖRR
+            }
+            else if (inputType == "2")
+            {
+                string addWord = AskForNewWord();
+                string addTheme = AskAddTheme(addWord);
+                Connection.AddAdjektivTODatabase(addWord, addTheme);
+                //Connection.AddAdjektivTODatabase(addWord);
+            }
+        }
+
+        private string AskAddTheme(string word)
+        {
+            string addThemeToWord;
+            do
+            {
+                Console.WriteLine($"Which theme(s) does {word} belong to? Separate with comma");
+                addThemeToWord = Console.ReadLine();
+
+            } while (!Regex.IsMatch(addThemeToWord, @"^[A-Za-zåäöÅÄÖ,\s]*$"));
+            return addThemeToWord;
         }
 
         private string AskForNewWord()
@@ -193,7 +210,7 @@ namespace Charader
                     Console.WriteLine("Press Enter to show word");
                     guessingIsActive = true;
                     StopAfterThreeSeconds();
-                    WordLoop(team);
+                    //WordLoop(team);
                 }
                 Console.Clear();
                 DisplayLeaderBoard(teamList);
