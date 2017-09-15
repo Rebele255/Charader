@@ -18,68 +18,68 @@ namespace Charader
         static void Main(string[] args)
         {
             Program p = new Program();
-           // WithHibernate();
             p.Menu();
 
+            //WithHibernate();
             //p.AddNewWords();
         }
 
-        private static void WithHibernate()
-        {
-            var session = DbService.OpenSession();
+        //private static void WithHibernate()
+        //{
+        //    var session = DbService.OpenSession();
 
-            //foreach (var word in session.Query<Adjektiv>())
-            //{
-            //    session.Delete(word);
-            //}
+        //    foreach (var word in session.Query<Adjektiv>())
+        //    {
+        //        session.Delete(word);
+        //    }
 
-            //foreach (var word in session.Query<Substantiv>())
-            //{
-            //    session.Delete(word);
-            //}
+        //    foreach (var word in session.Query<Substantiv>())
+        //    {
+        //        session.Delete(word);
+        //    }
 
 
 
-            var adjektiv1 = new Adjektiv
-            {
-                Word = "Krullig"
-            };
-            session.Save(adjektiv1);
+        //    var adjektiv1 = new Adjektiv
+        //    {
+        //        Word = "Krullig"
+        //    };
+        //    session.Save(adjektiv1);
 
-            //var substantiv1 = new Substantiv
-            //{
-            //    Word = "Grävskopa"
-            //};
-            var substantiv2 = new Substantiv
-            {
-                Word = "Hopprep"
-            };
-           // session.Save(substantiv1);
-            session.Save(substantiv2);
+        //    //var substantiv1 = new Substantiv
+        //    //{
+        //    //    Word = "Grävskopa"
+        //    //};
+        //    var substantiv2 = new Substantiv
+        //    {
+        //        Word = "Hopprep"
+        //    };
+        //   // session.Save(substantiv1);
+        //    session.Save(substantiv2);
 
-            //adda some themes och försök connecta dessa med substantiv --> gör metoder för detta och ändra i mappning, undersök med save - var behövs det?
+        //    //adda some themes och försök connecta dessa med substantiv --> gör metoder för detta och ändra i mappning, undersök med save - var behövs det?
 
-            foreach (var word in session.Query<Theme>())
-            {
-                session.Delete(word);
-            }
-            session.Flush();
+        //    foreach (var word in session.Query<Theme>())
+        //    {
+        //        session.Delete(word);
+        //    }
+        //    session.Flush();
 
-            var theme1 = new Theme
-            {
-                ThemeWord = "Vuxen"
-            };
-            var theme2 = new Theme
-            {
-                ThemeWord = "Barn"
-            };
-            adjektiv1.AddTheme(theme2);
-            session.Save(theme1);
-            session.Save(theme2);
-            //substantiv1.AddTheme(theme2);
-            //session.Save(substantiv1);
-            DbService.CloseSession(session);
-        }
+        //    var theme1 = new Theme
+        //    {
+        //        ThemeWord = "Vuxen"
+        //    };
+        //    var theme2 = new Theme
+        //    {
+        //        ThemeWord = "Barn"
+        //    };
+        //    adjektiv1.AddTheme(theme2);
+        //    session.Save(theme1);
+        //    session.Save(theme2);
+        //    //substantiv1.AddTheme(theme2);
+        //    //session.Save(substantiv1);
+        //    DbService.CloseSession(session);
+        //}
 
         private void Menu()
         {
@@ -95,9 +95,8 @@ namespace Charader
                 Console.WriteLine("[3] HighScore List");
                 //TODO: lägg in menyval settings
                 Console.WriteLine("[4] Quit");
-                Console.WriteLine("[5] Add new Theme");
-
-                int choice = int.Parse(Console.ReadLine());
+		//Console.WriteLine("[5] Add new Theme");
+                int choice = AskForMenuChoice();
                 Console.WriteLine();
 
                 switch (choice)
@@ -128,7 +127,17 @@ namespace Charader
             } while (gameInfo.PlayTheGame);
         }
 
-        private void AddNewTheme()
+        private static int AskForMenuChoice()
+        {
+            string input = "";
+            do
+            {
+                input = Console.ReadLine();
+                
+            } while (!Regex.IsMatch(input, @"[1-4qQ]"));
+            return int.Parse(Console.ReadLine());
+        }
+private void AddNewTheme()
         {
             var session = DbService.OpenSession();
             Console.Write("Tema: ");
@@ -141,7 +150,9 @@ namespace Charader
             DbService.CloseSession(session);
         }
 
-        private void CreateWordListsDB(string typeOfWord)
+        
+
+       private void CreateWordListsDB(string typeOfWord)
         {
             if (typeOfWord == "Substantiv")
             {
@@ -217,9 +228,9 @@ namespace Charader
         {
 
             List<Team> teamList = CreateTeams();
-            string input = "y";
+            string input = "";
             //loop på antal lag = en omgång
-            while (Regex.IsMatch(input, @"^[y](es)?"))
+            do
             {
                 Console.Clear();
                 foreach (var team in teamList)
@@ -233,7 +244,7 @@ namespace Charader
                 Console.Clear();
                 DisplayLeaderBoard(teamList);
                 input = AskForAnotherRound();
-            }
+            } while (Regex.IsMatch(input, @"^[y](es)?"));
             //TODO: spelet är slut och man vill lägga till omgången i HighScoreLista - genomsnitt per runda 
         }
 
