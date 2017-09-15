@@ -127,7 +127,7 @@ namespace Charader
             if (table == "Substantiv")
             {
                 gameInfo.ValidSubWordIdList = Connection.GetListOfIDFromDatabase(table);
-                
+
             }
             else if (table == "Adjektiv")
             {
