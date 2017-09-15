@@ -45,15 +45,15 @@ namespace Charader
             };
             session.Save(adjektiv1);
 
-            var substantiv1 = new Substantiv
-            {
-                Word = "Grävskopa"
-            };
+            //var substantiv1 = new Substantiv
+            //{
+            //    Word = "Grävskopa"
+            //};
             var substantiv2 = new Substantiv
             {
                 Word = "Hopprep"
             };
-            session.Save(substantiv1);
+           // session.Save(substantiv1);
             session.Save(substantiv2);
 
             //adda some themes och försök connecta dessa med substantiv --> gör metoder för detta och ändra i mappning, undersök med save - var behövs det?
@@ -75,8 +75,8 @@ namespace Charader
             adjektiv1.AddTheme(theme2);
             session.Save(theme1);
             session.Save(theme2);
-            substantiv1.AddTheme(theme2);
-            session.Save(substantiv1);
+            //substantiv1.AddTheme(theme2);
+            //session.Save(substantiv1);
             DbService.CloseSession(session);
         }
 
@@ -93,7 +93,7 @@ namespace Charader
                 Console.WriteLine("[1] Play Charuder");
                 Console.WriteLine("[2] Add new words");
                 Console.WriteLine("[3] HighScore List");
-                //TODO: lägg in menyýval settings
+                //TODO: lägg in menyval settings
                 Console.WriteLine("[4] Quit");
 
                 int choice = int.Parse(Console.ReadLine());
@@ -156,12 +156,13 @@ namespace Charader
             if (inputType == "1")
             {
                 string addWord = AskForNewWord();
-                Connection.AddWordToDatabase("Substantiv", "word", addWord);
+                Connection.AddSubstantivTODatabase(addWord);
+                //Connection.AddWordToDatabase("Substantiv", "word", addWord); //FÖRR
             }
             else if (inputType == "2")
             {
                 string addWord = AskForNewWord();
-                Connection.AddWordToDatabase("Adjektiv", "word", addWord);
+                Connection.AddAdjektivTODatabase(addWord);
             }
         }
 
