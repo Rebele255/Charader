@@ -58,6 +58,7 @@ namespace Charader
         {
             var session = DbService.OpenSession();
             var allSubstantiv = session.Query<Substantiv>().ToList();
+            DbService.CloseSession(session);
             return allSubstantiv;
 
         }
@@ -65,6 +66,7 @@ namespace Charader
         {
             var session = DbService.OpenSession();
             var allAdjektiv = session.Query<Adjektiv>().ToList();
+            DbService.CloseSession(session);
             return allAdjektiv;
 
         }

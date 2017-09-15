@@ -19,5 +19,6 @@ namespace Charader.Domain
             Substantives = new List<Substantiv>();
             Adjectives = new List<Adjektiv>();
         }
+
     }
 }
