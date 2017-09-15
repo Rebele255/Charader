@@ -27,10 +27,18 @@ namespace Charader
         {
             var session = DbService.OpenSession();
 
+            foreach (var word in session.Query<Adjektiv>())
+            {
+                session.Delete(word);
+            }
+
             foreach (var word in session.Query<Substantiv>())
             {
                 session.Delete(word);
             }
+
+
+
             var adjektiv1 = new Adjektiv
             {
                 Word = "Krullig"
@@ -41,7 +49,12 @@ namespace Charader
             {
                 Word = "Grävskopa"
             };
+            var substantiv2 = new Substantiv
+            {
+                Word = "Hopprep"
+            };
             session.Save(substantiv1);
+            session.Save(substantiv2);
 
             //adda some themes och försök connecta dessa med substantiv --> gör metoder för detta och ändra i mappning, undersök med save - var behövs det?
 
