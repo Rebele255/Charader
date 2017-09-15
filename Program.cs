@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Charader.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Charader.Domain;
+using NHibernate.Linq;
 
 namespace Charader
 {
@@ -14,11 +17,67 @@ namespace Charader
 
         static void Main(string[] args)
         {
+            //Program p = new Program();
+            //p.Menu();
 
-            Program p = new Program();
-            p.Menu();
+            WithHibernate();
+        }
+
+        private static void WithHibernate()
+        {
+            var session = DbService.OpenSession();
+
+            foreach (var word in session.Query<Adjektiv>())
+            {
+                session.Delete(word);
+            }
+
+            foreach (var word in session.Query<Substantiv>())
+            {
+                session.Delete(word);
+            }
 
 
+
+            var adjektiv1 = new Adjektiv
+            {
+                Word = "Krullig"
+            };
+            session.Save(adjektiv1);
+
+            var substantiv1 = new Substantiv
+            {
+                Word = "Grävskopa"
+            };
+            var substantiv2 = new Substantiv
+            {
+                Word = "Hopprep"
+            };
+            session.Save(substantiv1);
+            session.Save(substantiv2);
+
+            //adda some themes och försök connecta dessa med substantiv --> gör metoder för detta och ändra i mappning, undersök med save - var behövs det?
+
+            foreach (var word in session.Query<Theme>())
+            {
+                session.Delete(word);
+            }
+            session.Flush();
+
+            var theme1 = new Theme
+            {
+                ThemeWord = "Vuxen"
+            };
+            var theme2 = new Theme
+            {
+                ThemeWord = "Barn"
+            };
+            adjektiv1.AddTheme(theme2);
+            session.Save(theme1);
+            session.Save(theme2);
+            substantiv1.AddTheme(theme2);
+            session.Save(substantiv1);
+            DbService.CloseSession(session);
         }
 
         private void Menu()
