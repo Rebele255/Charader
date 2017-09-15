@@ -123,16 +123,16 @@ namespace Charader
         //    } while (gameInfo.PlayTheGame);
         //}
 
-        private void CreateValidListOfID(string table)
+        private void CreateValidListOfID(string typeOfWord)
         {
-            if (table == "Substantiv")
+            if (typeOfWord == "Substantiv")
             {
-                gameInfo.ValidSubWordIdList = Connection.GetListOfIDFromDatabase(table);
+                gameInfo.ValidSubWordIdList = Connection.GetListOfSubstantivFromDatabase();
                 
             }
-            else if (table == "Adjektiv")
+            else if (typeOfWord == "Adjektiv")
             {
-                gameInfo.ValidAdjWordIdList = Connection.GetListOfIDFromDatabase(table);
+                gameInfo.ValidAdjWordIdList = Connection.GetListOfAdjektivFromDatabase();
             }
         }
 

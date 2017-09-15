@@ -6,7 +6,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Charader.Domain;
-using Charader.Services;
 using Charader.Mapping;
 using NHibernate.Linq;
 
@@ -31,7 +30,7 @@ namespace Charader
                 substantiv.AddTheme(theme);
             }
             session2.Flush();
-            
+
             DbService.CloseSession(session2);
         }
         public static void AddAdjektivTODatabase(string input, string tema)
@@ -53,7 +52,7 @@ namespace Charader
             session2.Flush();
             DbService.CloseSession(session2);
         }
-        
+
 
         public static List<Substantiv> GetListOfSubstantivFromDatabase()
         {
@@ -62,7 +61,7 @@ namespace Charader
             return allSubstantiv;
 
         }
-public static List<Adjektiv> GetListOfAdjektivFromDatabase()
+        public static List<Adjektiv> GetListOfAdjektivFromDatabase()
         {
             var session = DbService.OpenSession();
             var allAdjektiv = session.Query<Adjektiv>().ToList();
@@ -72,43 +71,43 @@ public static List<Adjektiv> GetListOfAdjektivFromDatabase()
 
 
 
-        public static int GetNumberOfWordsFromTable(string table)
-        {
-            using (var con = new SqlConnection(connectionString))
-            {
-                int wordCount = 0;
-                using (var com = new SqlCommand($"SELECT * FROM {table}", con))
-                {
-                    con.Open();
-                    var reader = com.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        wordCount++;
-                    }
-                    //com.ExecuteNonQuery();
+        //public static int GetNumberOfWordsFromTable(string table)
+        //{
+        //    using (var con = new SqlConnection(connectionString))
+        //    {
+        //        int wordCount = 0;
+        //        using (var com = new SqlCommand($"SELECT * FROM {table}", con))
+        //        {
+        //            con.Open();
+        //            var reader = com.ExecuteReader();
+        //            while (reader.Read())
+        //            {
+        //                wordCount++;
+        //            }
+        //            //com.ExecuteNonQuery();
 
-                }
-                return wordCount;
-            }
-        }
-        public static List<int> GetListOfIDFromDatabase(string table)
-        {
-            List<int> listOfID = new List<int>();
-            using (var con = new SqlConnection(connectionString))
-            {
-                using (var com = new SqlCommand($"SELECT ID FROM {table}", con))
-                {
-                    con.Open();
-                    var reader = com.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        listOfID.Add(reader.GetInt32(0));
-                    }
-                    //com.ExecuteNonQuery();
+        //        }
+        //        return wordCount;
+        //    }
+        //}
+        //public static List<int> GetListOfIDFromDatabase(string table)
+        //{
+        //    List<int> listOfID = new List<int>();
+        //    using (var con = new SqlConnection(connectionString))
+        //    {
+        //        using (var com = new SqlCommand($"SELECT ID FROM {table}", con))
+        //        {
+        //            con.Open();
+        //            var reader = com.ExecuteReader();
+        //            while (reader.Read())
+        //            {
+        //                listOfID.Add(reader.GetInt32(0));
+        //            }
+        //            //com.ExecuteNonQuery();
 
-                }
-                return listOfID;
-            }
-        }
+        //        }
+        //        return listOfID;
+        //    }
+        //}
     }
 }
